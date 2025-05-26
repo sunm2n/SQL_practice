@@ -1,0 +1,136 @@
+--4.10
+SELECT SYSDATE FROM DUAL;
+
+SELECT SYSTIMESTAMP FROM DUAL;
+
+--4.11
+SELECT ENAME,
+       HIREDATE,
+       EXTRACT(YEAR FROM HIREDATE) 입사년도,
+       EXTRACT(MONTH FROM HIREDATE) 입사월,
+       EXTRACT(DAY FROM HIREDATE) 입사일
+FROM EMP;
+
+SELECT ENAME,
+       HIREDATE,
+       TO_NUMBER(TO_CHAR(HIREDATE,'YYYY')) 입사년도,
+       TO_NUMBER(TO_CHAR(HIREDATE,'MM')) 입사월,
+       TO_NUMBER(TO_CHAR(HIREDATE,'DD')) 입사일
+FROM EMP;
+
+--4.14
+SELECT TO_CHAR(SYSDATE,'YYYY/MM/DD')숫자,
+       TO_CHAR(SYSDATE,'YYYY.MON,DAY') 문자
+FROM DUAL;
+
+--4.15
+SELECT TO_CHAR(123456789/1200,'$999,999,999.99')환율반영달러,
+    TO_CHAR(123456789,'L999,999,999')원화
+FROM DUAL;
+
+--4.16
+SELECT * FROM DEPT;
+
+SELECT DNAME,
+    CASE
+        WHEN DEPTNO=10 THEN 100
+        WHEN DEPTNO=20 THEN 200
+        ELSE DEPTNO*10
+    END NEWDEPTNO
+FROM DEPT;
+
+--4.17
+SELECT ENAME,
+    CASE WHEN SAL >= 3000 THEN 'HIGH'
+         WHEN SAL >= 1000 THEN 'MID'
+         ELSE 'LOW'
+    END SALARY_GRADE
+FROM EMP;
+
+--4.19
+SELECT LOC,
+    CASE LOC
+        WHEN 'NEW YORK' THEN 'EAST'
+        WHEN 'BOSTON' THEN 'EAST'
+        WHEN 'DALLAS' THEN 'CENTER'
+        WHEN 'CHICAGO' THEN 'CENTER'
+        ELSE 'ETC'
+    END AREA
+FROM DEPT;
+
+--4.19
+SELECT ENAME, SAL, -- PPT 방식
+    CASE
+        WHEN SAL>=2000 THEN 1000
+        ELSE(CASE WHEN SAL>=1000 THEN 500
+             ELSE 0
+             END)
+        END BONUS
+FROM EMP;
+
+SELECT ENAME, SAL, -- CASE문 한번만 사용
+    CASE 
+        WHEN SAL>=2000 THEN 1000
+        WHEN SAL>=1000 THEN 500
+        ELSE 0
+    END BONUS
+FROM EMP;
+
+--4.20
+-- NUL(expr1, expr2) => expr1이 널값이면 expr2를 리턴하고 아니면 expr1을 리턴해라
+-- NULLIF (expr1, expr2) =>  두개를 비교해서 값이 같으면 널을 리턴 아니면 expr1을 리턴해라
+--  COALESCE(expr1, expr2, …) => 쭉 expr을 보다가 널값이 아닌 것을 처음 만난 것을 리턴해라
+-- NVL2(expr1, expr2, expr3) => 맨 앞에꺼가 널인지 아닌지에 따라 두번째 세번째 값중 하나를 리턴
+
+--4.20
+SELECT ENAME, COMM -- PPT방식
+FROM EMP
+WHERE JOB='SALESMAN' OR JOB='MANAGER';
+
+SELECT ENAME, COMM -- OR 사용 대신 IN 사용
+FROM EMP
+WHERE JOB IN('SALESMAN','MANAGER');
+
+SELECT ENAME,
+       NVL(COMM,100) COMMITION
+FROM EMP
+WHERE JOB='SALESMAN' OR JOB='MANAGER';
+
+--4.23
+SELECT EMPNO,
+       NVL2(MGR,1,0) MGR
+FROM EMP
+WHERE DEPTNO=10;
+
+SELECT COMM, COALESCE(COMM,100)
+FROM EMP;
+
+--4.24
+SELECT ENAME, 
+       EMPNO, 
+       MGR, 
+       NULLIF(MGR,7698) NULF
+FROM EMP;
+
+SELECT ENAME,EMPNO,MGR,
+    CASE
+        WHEN MGR=7698 THEN NULL
+        ELSE MGR
+    END NULF
+FROM EMP;
+
+--4.25
+SELECT MGR
+FROM EMP
+WHERE ENAME='KING'; -- (NULL)출력을 통해 KING의 MGR가 없다
+
+SELECT MGR
+FROM EMP
+WHERE ENAME='JOE'; -- 아무것도 출력이 안되는 것을 통해 JOE라는 EMP가 없다는 것을 알 수 있다
+
+    
+
+
+
+        
+    
